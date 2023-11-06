@@ -1,0 +1,43 @@
+version: '3.8'
+
+networks:
+  app_network:
+
+services:
+
+  # =========================== nginx service ============================
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_container
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./service-config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - laravel_app
+    networks:
+      - app_network
+
+
+  # ============================= laravel app ==============================
+  laravel_app:
+    build: .
+    ports:
+      - "9000:8000"
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - app_network
+
+
+# NOTE: volumes in web server and volumes in application must be the same directory 
+# so everything in application container is also has in web server container so web server can serve the content
+# like in nginx
+# volumes:
+#   - ./:/var/www/html
+# in laravel_app 
+# volumes:
+#   - ./:/var/www/html
