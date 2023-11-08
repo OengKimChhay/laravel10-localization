@@ -1,0 +1,5 @@
+vendor/
+service-config/
+.env
+.git
+docker-compose.yml
